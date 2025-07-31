@@ -114,7 +114,7 @@ st.dataframe(ranking.style.apply(highlight_top, axis=1), use_container_width=Tru
 # --- Download Results ---
 def to_excel(df):
     output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name='MOORA Results')
     return output.getvalue()
 
