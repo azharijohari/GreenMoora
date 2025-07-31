@@ -5,7 +5,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from io import BytesIO
-import openpyxl
 
 # --- Page Configuration ---
 st.set_page_config(page_title="GreenMOORA: Big Data MCDM for Sustainability", layout="wide")
