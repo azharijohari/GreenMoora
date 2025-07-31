@@ -72,8 +72,13 @@ except:
 
 # --- Normalize matrix (Vector normalization) ---
 normalized_matrix = criteria_matrix / np.sqrt((criteria_matrix ** 2).sum())
+
+# Create DataFrame with proper column names for display
+normalized_df = pd.concat([alternative_names, normalized_matrix], axis=1)
+normalized_df.columns = ["Alternative"] + list(criteria_matrix.columns)
+
 st.subheader("📊 Normalized Decision Matrix")
-st.dataframe(pd.concat([alternative_names, weighted_matrix], axis=1).style.hide(axis="index")) 
+st.dataframe(normalized_df.style.hide(axis="index"))
 
 # --- Apply Weights ---
 weighted_matrix = normalized_matrix * weights
