@@ -118,7 +118,7 @@ def to_excel(df):
         df.to_excel(writer, index=False, sheet_name='MOORA Results')
     return output.getvalue()
 
-excel_data = to_excel(ranking)
+with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
 st.download_button("📥 Download Results as Excel", data=excel_data, file_name="greenmoora_results.xlsx")
 
 # --- Footer ---
