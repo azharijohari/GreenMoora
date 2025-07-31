@@ -5,6 +5,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from io import BytesIO
+import altair as alt
 
 # --- Page Configuration ---
 st.set_page_config(page_title="GreenMOORA: Big Data MCDM for Sustainability", layout="wide")
@@ -72,12 +73,12 @@ except:
 # --- Normalize matrix (Vector normalization) ---
 normalized_matrix = criteria_matrix / np.sqrt((criteria_matrix ** 2).sum())
 st.subheader("📊 Normalized Decision Matrix")
-st.dataframe(pd.concat([alternative_names, normalized_matrix], axis=1))
+st.dataframe(pd.concat([alternative_names, weighted_matrix], axis=1).style.hide(axis="index")) 
 
 # --- Apply Weights ---
 weighted_matrix = normalized_matrix * weights
 st.subheader("📌 Weighted Normalized Matrix")
-st.dataframe(pd.concat([alternative_names, weighted_matrix], axis=1))
+st.dataframe(pd.concat([alternative_names, weighted_matrix], axis=1).style.hide(axis="index")) 
 
 # --- Compute MOORA Scores ---
 benefit_indices = [i for i, imp in enumerate(impacts) if imp == '+']
@@ -92,16 +93,30 @@ ranking = pd.DataFrame({
     "Rank": moora_scores.rank(ascending=False).astype(int)
 }).sort_values(by="MOORA Score", ascending=False)
 
-# --- Highlight Top Rank ---
 st.subheader("🏆 Final Ranking (MOORA)")
-def highlight_top(row):
-    return ['background-color: lightgreen; font-weight: bold' if row['Rank'] == 1 else '' for _ in row]
-st.dataframe(ranking.style.apply(highlight_top, axis=1), use_container_width=True)
+col1, col2 = st.columns([1, 1.2])  # NEW layout
 
-# --- Visualization: Bar Chart of MOORA Scores ---
-st.subheader("📈 MOORA Score Visualization")
+# Left: Table with highlight
+with col1:
+    def highlight_top(row):
+        return ['background-color: lightgreen; font-weight: bold' if row['Rank'] == 1 else '' for _ in row]
+    st.dataframe(ranking.style.apply(highlight_top, axis=1).hide(axis="index"), use_container_width=True)
 
-st.bar_chart(ranking.set_index("Alternative")["MOORA Score"])
+# Right: Altair Bar Chart
+with col2:
+    st.subheader("📈 MOORA Score Visualization")
+    chart_data = ranking.sort_values("MOORA Score", ascending=False)
+    chart = alt.Chart(chart_data).mark_bar().encode(
+        x=alt.X("MOORA Score:Q", title="MOORA Score"),
+        y=alt.Y("Alternative:N", sort='-x', title="Alternative"),
+        color=alt.condition(
+            alt.datum.Rank == 1,
+            alt.value("green"),      # highlight top 1
+            alt.value("lightblue")   # others
+        ),
+        tooltip=["Alternative", "MOORA Score", "Rank"]
+    ).properties(width=500, height=400)
+    st.altair_chart(chart, use_container_width=True)
 
 # --- Download Results ---
 def to_excel(df):
