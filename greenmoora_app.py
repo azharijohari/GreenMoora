@@ -19,20 +19,8 @@ Built with **Streamlit** and powered by **Big Data and MCDM**, this system helps
 evaluate performance across multiple dimensions with clarity and transparency.
 """)
 
-# --- Load Example Dataset ---
-def load_example_data():
-    data = {
-        "Project": ["Project A", "Project B", "Project C", "Project D"],
-        "Energy Efficiency": [85, 90, 78, 88],
-        "Carbon Reduction": [70, 65, 85, 80],
-        "Innovation Index": [90, 80, 88, 75],
-        "Scalability": [75, 85, 70, 80]
-    }
-    return pd.DataFrame(data)
-
 # --- Upload Section ---
 uploaded_file = st.file_uploader("📤 Upload Decision Matrix (CSV or Excel)", type=["csv", "xlsx"])
-use_example = st.checkbox("Use example sustainability dataset", value=not uploaded_file)
 
 # --- Read Data ---
 if uploaded_file:
@@ -40,11 +28,10 @@ if uploaded_file:
         df = pd.read_csv(uploaded_file)
     else:
         df = pd.read_excel(uploaded_file)
-elif use_example:
-    df = load_example_data()
 else:
-    st.warning("Please upload a dataset or select the example.")
+    st.warning("Please upload a dataset to proceed. The first column should contain alternative names, and the remaining columns numeric criteria.")
     st.stop()
+
 
 # --- Validate Data ---
 if df.shape[1] < 3:
