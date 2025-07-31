@@ -98,6 +98,11 @@ def highlight_top(row):
     return ['background-color: lightgreen; font-weight: bold' if row['Rank'] == 1 else '' for _ in row]
 st.dataframe(ranking.style.apply(highlight_top, axis=1), use_container_width=True)
 
+# --- Visualization: Bar Chart of MOORA Scores ---
+st.subheader("📈 MOORA Score Visualization")
+
+st.bar_chart(ranking.set_index("Alternative")["MOORA Score"])
+
 # --- Download Results ---
 def to_excel(df):
     output = BytesIO()
