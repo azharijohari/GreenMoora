@@ -43,6 +43,14 @@ if df.shape[1] < 3:
 alternative_names = df.iloc[:, 0]
 criteria_matrix = df.iloc[:, 1:]
 
+# 🔹 Force all criteria to numeric
+criteria_matrix = criteria_matrix.apply(pd.to_numeric, errors='coerce')
+
+# 🔹 Stop if any invalid data detected
+if criteria_matrix.isnull().any().any():
+    st.error("Some values could not be converted to numbers. Please check your file for text or symbols.")
+    st.stop()
+
 # --- Input Weights and Impacts ---
 st.subheader("⚖️ Criteria Weights and Impacts")
 
