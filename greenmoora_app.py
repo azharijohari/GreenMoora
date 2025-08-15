@@ -8,10 +8,10 @@ from io import BytesIO
 import altair as alt
 
 # --- Page Configuration ---
-st.set_page_config(page_title="GreenMOORA: Big Data MCDM for Sustainability", layout="wide")
+st.set_page_config(page_title="GreenMOORA: A Web-Based Python Tool for Big Data MCDM in Sustainability and Innovation Impact", layout="wide")
 
 # --- Title and Description ---
-st.title("🌱 GreenMOORA: Big Data MCDM for Sustainability and Innovation Impact")
+st.title("🌱 GreenMOORA: A Web-Based Python Tool for Big Data MCDM in Sustainability and Innovation Impact")
 st.markdown("""
 GreenMOORA is a decision support tool using the **MOORA method** to rank alternatives
 (such as innovations, regions, or projects) based on **sustainability and impact** criteria.
